@@ -4,7 +4,7 @@
  */
 
 `default_nettype none
-module tt_um_example (
+module tt_um_unified (
     input  wire [7:0] ui_in,    // Dedicated inputs: [7:0] data_in
     output wire [7:0] uo_out,   // Dedicated outputs: [0] serial, [1] busy
     input  wire [7:0] uio_in,   // IOs: [0] load
