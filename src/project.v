@@ -17,8 +17,6 @@ module tt_um_unified_error_detection (
 
     // --- Instantiate the Error Detection Engine ---
     serial_error_engine err_engine_inst (
-        .clk        (clk),      // You can still pass them in case you 
-        .rst_n      (rst_n),    // decide to add registers later.
         .data_in    (ui_in),
         .select     (uio_in[1:0]), // Using IO pins for the mux select
         .serial_out (uo_out)       // The 8-bit muxed result
