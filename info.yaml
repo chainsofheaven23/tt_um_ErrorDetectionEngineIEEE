@@ -1,11 +1,11 @@
 # Tiny Tapeout project information
 project:
-  title:        "Serial Error Connection Engine"      # Project title
+  title:        "8-Bit Error Detection Engine"      # Project title
   author:       "Himadri Ghosh, Aditya Panigrahi, Chiranjeet Bhattacharjee, Debaditya Dasgupta, Subir Kr. Maity"      # Your name
   discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  "A hardware engine designed for serial error detection and correction."      # One line description of what your project does
+  description:  "A multiplexed combinational engine providing Hamming(12,8) and CRC-8 data protection for high-reliability 8-bit SoC communication."      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
-  clock_hz:     50000000       # Clock frequency in Hz (or 0 if not applicable)
+  clock_hz:     0      # Clock frequency in Hz (or 0 if not applicable)
 
   # How many tiles your design occupies? A single tile is about 167x108 uM.
   tiles: "1x1"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2 or 8x2
