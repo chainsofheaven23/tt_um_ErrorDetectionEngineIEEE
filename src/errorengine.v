@@ -1,6 +1,4 @@
 module serial_error_engine (
-    input  wire       clk,
-    input  wire       rst_n,
     input  wire [7:0] data_in,
     input  wire [1:0] select,     // Changed to 2-bit as you only use 3 modes
     output reg  [7:0] serial_out  // Removed trailing comma
