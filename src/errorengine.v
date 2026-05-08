@@ -1,7 +1,7 @@
 module serial_error_engine (
     input  wire [7:0] data_in,
     input  wire [1:0] select,     // Changed to 2-bit as you only use 3 modes
-    output reg  [7:0] serial_out  // Removed trailing comma
+    output wire  [7:0] serial_out  // Removed trailing comma
 );
 
     // --- Internal Combinational Logic ---
@@ -37,13 +37,10 @@ module serial_error_engine (
     assign shift_reg = {h_bus, c_res};
 
     // Combinational Output Multiplexer
-    always @(*) begin
-        case (select)
-            2'b00:   serial_out = {4'b0000, shift_reg[19:16]}; // MSB bits
-            2'b01:   serial_out = shift_reg[15:8];             // Middle bits
-            2'b10:   serial_out = shift_reg[7:0];              // LSB bits (CRC)
-            default: serial_out = data_in;                     // Bypass mode
-        endcase
-    end
+assign serial_out =
+    (select == 2'b00) ? {4'b0000, shift_reg[19:16]} :
+    (select == 2'b01) ? shift_reg[15:8] :
+    (select == 2'b10) ? shift_reg[7:0]  :
+                        data_in;
 
 endmodule
