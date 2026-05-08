@@ -9,38 +9,28 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-This project is a high-reliability Serial Error Correction Engine that combines two layers of data protection: Hamming(12,8) encoding and a CRC-8 checksum.
+This project is a high-reliability Combinational Error Detection Engine that combines two layers of data protection: Hamming(12,8) encoding and a CRC-8 checksum. Unlike serial designs, this engine provides zero-latency encoding by using pure XOR trees.
 
-Encoding Layer 1 (Hamming): When an 8-bit data byte is loaded via ui_in, the engine immediately generates 4 parity bits using a Hamming(12,8) XOR tree, creating a 12-bit protected word.
+Encoding Layer 1 (Hamming): The 8-bit data from ui_in is instantly processed through a Hamming(12,8) XOR tree to generate 4 parity bits, creating a 12-bit protected codeword.
 
-Encoding Layer 2 (CRC): The 12-bit Hamming word is then fed into a secondary XOR tree to calculate an 8-bit CRC checksum.
+Encoding Layer 2 (CRC): The 12-bit Hamming word is simultaneously fed into a secondary XOR tree to calculate an 8-bit CRC-8 checksum (Polynomial 0x07).
 
-Serialization: These two components are combined into a 20-bit hybrid codeword.
-
-Output: Upon a load trigger, the engine sets a busy flag high and shifts the 20-bit codeword out serially through uo_out[0] at the rate of one bit per clock cycle.
+Multiplexed Output: Because the final protected frame is 20 bits wide (12 bits Hamming + 8 bits CRC), it exceeds the 8-bit output limit. The design uses a 4-to-1 multiplexer controlled by uio_in[1:0] to allow a receiver to read the full 20-bit codeword in three 8-bit chunks.
 
 ## How to test
 
-To test the engine, follow these steps using the input pins provided:
+Testing is performed by setting the input data and toggling the selection bits to read the protected segments:
 
-Reset: Apply a low pulse to rst_n to clear the internal shift register and bit counter.
+Input Data: Set your 8-bit test pattern on ui_in[7:0].
 
-Input Data: Set your 8-bit test pattern on the ui_in[7:0] pins.
+Read Segment 0 (MSB): Set uio_in[1:0] to 00. uo_out[3:0] will show the 4 most significant bits of the Hamming codeword (padded with leading zeros).
 
-Trigger: Pulse the load signal (uio_in[0]) high for exactly one clock cycle while the engine is not busy.
+Read Segment 1 (Mid): Set uio_in[1:0] to 01. uo_out[7:0] will show the 8 least significant bits of the Hamming codeword.
 
-Monitor:
+Read Segment 2 (CRC): Set uio_in[1:0] to 10. uo_out[7:0] will show the 8-bit CRC checksum.
 
-Observe the busy signal (uo_out[1]) going high.
-
-Capture the serial bitstream on uo_out[0] for the next 20 clock cycles.
-
-The engine is ready for a new load once busy returns to low.
-
+Bypass Check: Set uio_in[1:0] to 11. uo_out[7:0] should exactly match your ui_in value.
 ## External hardware
+Microcontroller / FPGA: An external controller is needed to cycle through the select states (00, 01, 10) and capture the output to reconstruct the 20-bit protected frame.
 
-This project does not strictly require specific external PMODs, but for physical verification, the following are recommended:
-
-Logic Analyzer: To capture and verify the 20-bit serial output sequence against the expected Hamming-CRC values.
-
-Microcontroller (Optional): An Arduino or ESP32 can be used to automate the load pulse and read the serial stream for high-speed testing.
+Logic Analyzer: Highly recommended to verify that the transitions between select states result in the correct bit segments.
