@@ -17,20 +17,18 @@ module tt_um_unified_error_detection (
 
     // --- Instantiate the Error Detection Engine ---
     serial_error_engine err_engine_inst (
-        .clk        (clk),
-        .rst_n      (rst_n),
-        .data_in    (ui_in),        // Connect ui_in to data input
-        .load       (uio_in[0]),    // Connect first IO to load signal
-        .serial_out (uo_out[0]),    // Output bit on uo_out[0]
-        .busy       (uo_out[1])     // Output busy status on uo_out[1]
+        .clk        (clk),      // You can still pass them in case you 
+        .rst_n      (rst_n),    // decide to add registers later.
+        .data_in    (ui_in),
+        .select     (uio_in[1:0]), // Using IO pins for the mux select
+        .serial_out (uo_out)       // The 8-bit muxed result
     );
 
-    // --- Tie off unused outputs ---
-    assign uo_out[7:2] = 6'b0;      // Pins 2 through 7 are unused
-    assign uio_out     = 8'b0;      // Bidirectional outputs not used
-    assign uio_oe      = 8'b0;      // All bidirectional pins are inputs
+    // Tie off unused TT signals
+    assign uio_out = 8'b0;
+    assign uio_oe  = 8'b0; // All uio pins are inputs
 
-    // Prevent warnings for unused input bits
-    wire _unused = &{ena, ui_in, uio_in[7:1], 1'b0};
+    // Prevent "Unused Input" warnings during synthesis
+    wire _unused = &{ena, clk, rst_n, uio_in[7:2], 1'b0};
 
 endmodule
