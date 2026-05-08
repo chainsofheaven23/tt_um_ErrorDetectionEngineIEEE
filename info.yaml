@@ -23,7 +23,7 @@ project:
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 # This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).
 pinout:
-  # Inputs
+  # Inputs (Dedicated)
   ui[0]: "data_in[0]"
   ui[1]: "data_in[1]"
   ui[2]: "data_in[2]"
@@ -33,19 +33,19 @@ pinout:
   ui[6]: "data_in[6]"
   ui[7]: "data_in[7]"
 
-  # Outputs
-  uo[0]: "serial_out"
-  uo[1]: "busy"
-  uo[2]: "unused"
-  uo[3]: "unused"
-  uo[4]: "unused"
-  uo[5]: "unused"
-  uo[6]: "unused"
-  uo[7]: "unused"
+  # Outputs (Dedicated)
+  uo[0]: "out[0]"
+  uo[1]: "out[1]"
+  uo[2]: "out[2]"
+  uo[3]: "out[3]"
+  uo[4]: "out[4]"
+  uo[5]: "out[5]"
+  uo[6]: "out[6]"
+  uo[7]: "out[7]"
 
-  # Bidirectional pins
-  uio[0]: "load"
-  uio[1]: "unused"
+  # Bidirectional pins (Used as inputs for selection)
+  uio[0]: "select[0]"
+  uio[1]: "select[1]"
   uio[2]: "unused"
   uio[3]: "unused"
   uio[4]: "unused"
