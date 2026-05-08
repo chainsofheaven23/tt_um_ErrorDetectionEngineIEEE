@@ -4,29 +4,29 @@
  */
 
 `default_nettype none
+
 module tt_um_unified_error_detection (
-    input  wire [7:0] ui_in,    // Dedicated inputs: [7:0] data_in
-    output wire [7:0] uo_out,   // Dedicated outputs: [0] serial, [1] busy
-    input  wire [7:0] uio_in,   // IOs: [0] load
-    output wire [7:0] uio_out,  // IOs: Output path
-    output wire [7:0] uio_oe,   // IOs: Enable path
-    input  wire       ena,      // always 1
-    input  wire       clk,      // clock
-    input  wire       rst_n     // reset_n
+    input  wire [7:0] ui_in,
+    output wire [7:0] uo_out,
+    input  wire [7:0] uio_in,
+    output wire [7:0] uio_out,
+    output wire [7:0] uio_oe,
+    input  wire       ena,
+    input  wire       clk,
+    input  wire       rst_n
 );
 
-    // --- Instantiate the Error Detection Engine ---
-    serial_error_engine err_engine_inst (
-        .data_in    (ui_in),
-        .select     (uio_in[1:0]), // Using IO pins for the mux select
-        .serial_out (uo_out)       // The 8-bit muxed result
-    );
+    // TEMPORARY DEBUG CONNECTION
+    // Directly connect input to output
+    assign uo_out = ui_in;
 
-    // Tie off unused TT signals
+    // Unused bidirectional pins
     assign uio_out = 8'b0;
-    assign uio_oe  = 8'b0; // All uio pins are inputs
+    assign uio_oe  = 8'b0;
 
-    // Prevent "Unused Input" warnings during synthesis
-    wire _unused = &{ena, clk, rst_n, uio_in[7:2], 1'b0};
+    // Prevent unused warnings
+    wire _unused = &{ena, clk, rst_n, uio_in, 1'b0};
 
 endmodule
+
+`default_nettype wire
